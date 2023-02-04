@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-data-connector
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-data-connector
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: go-data-connector
+        tier: backend
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: go-data-connector
+        ports:
+        - containerPort: 1323
+        image: registry.symper.vn/{SYMPER_IMAGE}
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
+          limits:
+            memory: "1000Mi"
+            cpu: "500m"
+        lifecycle:
+            postStart:
+              exec:
+                command: [ "/bin/sh","-c","rm /app/env.json && cp env.json /app" ]
+        volumeMounts:
+        - name: config-env
+          mountPath: /src
+      volumes:
+      - name: config-env
+        configMap:
+          name: env-data-connector

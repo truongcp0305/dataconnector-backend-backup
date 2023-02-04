@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-data-connector
+  labels:
+    tier: backend
+data:
+  env.json : | 
+    {
+      "environment":"{ENVIRONMENT}",
+      "db":{
+        "postgresql":{
+            "host":"103.56.157.180",
+            "dbname":"{ENVIRONMENT_}data_connector_symper_vn",
+            "username":"{POSTGRES_USER}",
+            "password":"{POSTGRES_PASSWORD}"
+        }
+      }
+    }
